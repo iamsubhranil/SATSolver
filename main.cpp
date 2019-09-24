@@ -47,45 +47,12 @@ void solve(Scanner s, const char *name) {
 	// b->disassemble();
 	cout << "\nGenerating solutions..\n";
 	clock_t start = clock();
-	Resptr  satisfied = Engine::solve(b);
+	int     satisfied = Engine::solve(b);
 	clock_t end = clock() - start;
-	cout << "Satisfied instances : " << satisfied->size();
-	if(satisfied->size() > 0) {
-		cout << "\nOne of them is : ";
-		for(auto &val : *(satisfied.get())) {
-			uintmax_t v = val;
-			for(int j = 0; j < b->numSlots(); j++) {
-				cout << ((v & 1) ? '1' : '0');
-				v >>= 1;
-			}
-			break;
-		}
-	}
+	cout << "Satisfied instances : " << satisfied;
 	cout << "\nelapsed: " << setprecision(6) << fixed
 	     << ((double)end / CLOCKS_PER_SEC) << "\n";
 	(void)name;
-//#define SAT_SAVE_RESULT
-#ifdef SAT_SAVE_RESULT
-	int   lastbit = b->numSlots();
-	char *result  = (char *)malloc(((lastbit + 1) * satisfied->size()) + 1);
-	size_t k       = 0;
-	for(auto &i : *satisfied.get()) {
-		uintmax_t val = i;
-		for(int j = 0; j < lastbit; j++) {
-			result[k++] = ((val & (1 << j)) ? '1' : '0');
-		}
-		result[k++] = '\n';
-	}
-	result[k] = '\0';
-
-	char *resname = (char *)malloc(strlen(name) + 8);
-	snprintf(resname, strlen(name) + 8, "%s_results", name);
-	FILE *f       = fopen(resname, "w");
-	fprintf(f, "%s", result);
-	fclose(f);
-	free(resname);
-	free(result);
-#endif
 }
 
 int main(int argc, char **argv) {

@@ -8,8 +8,9 @@ using Resptr = std::unique_ptr<Result>;
 
 class Engine {
   public:
-	static void next_sequence(bool *sq, int num);
+	// returns whether there is atleast one 1 in the sequence
+	static bool   next_sequence(bool *sq, int num);
 	static void print_sequence(bool *sq, int num);
-	static Resptr solve(Bytecode &code);
+	static int    solve(Bytecode &code);
 	static bool execute(const unsigned char *ins, bool *stack_, int slots);
 };
