@@ -98,8 +98,8 @@ const char *Token::TokenNames[] = {"TOKEN_LEFT_PAREN", "TOKEN_RIGHT_PAREN",
 
                                    "TOKEN_ERROR",      "TOKEN_EOF"};
 
-const char *Token::FormalNames[] = {"(",     ")",          ".",
-                                    "+",     "'",          "identifier",
+const char *Token::FormalNames[] = {"(",     ")",          "&",
+                                    "|",     "!",          "identifier",
 
                                     "error", "end of file"};
 
