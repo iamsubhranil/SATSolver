@@ -12,5 +12,7 @@ grammar_peg
 sat
 perf.*
 *.patch
+inputs/
+*.sat_result*
 benchmarks/baseline.txt
 bench_results

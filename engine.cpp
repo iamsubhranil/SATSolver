@@ -7,15 +7,12 @@
 using namespace std;
 
 void Engine::next_sequence(bool *sq, int num) {
-	if(sq[num - 1] == false) {
-		sq[num - 1] = true;
-	} else {
-		int n = num - 1;
-		while(sq[n]) {
-			sq[n--] = false;
-		}
-		sq[n] = true;
+	--num;
+	while(num >= 0 && sq[num]) {
+		sq[num--] = false;
 	}
+	if(num >= 0)
+		sq[num] = true;
 }
 
 void Engine::print_sequence(bool *sq, int num) {
@@ -24,20 +21,25 @@ void Engine::print_sequence(bool *sq, int num) {
 	}
 }
 
-void Engine::solve(Bytecode &b) {
+Resptr Engine::solve(Bytecode &b) {
 	bool *               s   = (bool *)malloc(sizeof(bool) * b->maxStackSize());
 	const unsigned char *ins = b->bytecodes.data();
 	memset(s, 0, sizeof(bool) * b->maxStackSize());
-	int       slots = b->numSlots();
-	uintmax_t loop  = 1 << slots;
-	// unordered_set<uintmax_t> satisfied;
+	int       slots     = b->numSlots();
+	uintmax_t loop      = 1 << slots;
+	Resptr    satisfied = make_unique<Result>();
 	for(uintmax_t i = 0; i < loop; i++) {
 		next_sequence(s, slots);
-		execute(ins, s, slots);
 		// print_sequence(s, slots);
-		// cout << " : ";
-		// cout << "satisfied\n";
+		if(execute(ins, s, slots)) {
+			// cout << " : satisfied";
+			satisfied->insert(i + 1); // next_sequence starts from 00..0001
+		} else {
+			// cout << " : not satisfied";
+		}
+		// cout << "\n";
 	}
+	return Resptr(satisfied.release());
 }
 
 bool Engine::execute(const unsigned char *ins, bool *Stack, int slots) {
@@ -141,7 +143,7 @@ bool Engine::execute(const unsigned char *ins, bool *Stack, int slots) {
 
 			CASE(jumpiffalse) : {
 				int to = next_int();
-				if(TOP) {
+				if(!TOP) {
 					JUMPTO(to - sizeof(int));
 				}
 				DISPATCH();

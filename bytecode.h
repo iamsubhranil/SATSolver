@@ -15,7 +15,8 @@ class BytecodeHolder {
 	int                  lastInsPos;
 	int                  slots;
 	BytecodeHolder()
-	    : bytecodes(), stackMaxSize(0), presentStackSize(0), lastInsPos(0) {}
+	    : bytecodes(), stackMaxSize(0), presentStackSize(0), lastInsPos(0),
+	      slots(0) {}
 
 	enum Opcode : uint8_t {
 #define OPCODE0(x, y) CODE_##x,

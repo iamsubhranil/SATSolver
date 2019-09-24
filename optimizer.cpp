@@ -30,8 +30,9 @@ void Optimizer::optimize(Bytecode &orig) {
 				if(loc != origloc) {
 					orig->jumpiffalse(i, loc);
 #ifdef DEBUG
-					cout << setw(4) << i << ": " << setw(0) << "jumpiffalse "
-					     << origloc << " -> " << loc << "\n";
+					cout << "\n"
+					     << setw(4) << i << ": " << setw(0) << "jumpiffalse "
+					     << origloc << " -> " << loc;
 #endif
 				}
 				i++;
@@ -64,8 +65,9 @@ void Optimizer::optimize(Bytecode &orig) {
 				if(loc != origloc) {
 					orig->jumpiftrue(i, loc);
 #ifdef DEBUG
-					cout << setw(4) << i << ": " << setw(0) << "jumpiftrue "
-					     << origloc << " -> " << loc << "\n";
+					cout << "\n"
+					     << setw(4) << i << ": " << setw(0) << "jumpiftrue "
+					     << origloc << " -> " << loc;
 #endif
 				}
 				i++;
