@@ -14,5 +14,6 @@ perf.*
 *.patch
 inputs/
 *.sat_result*
+*__pycache__*
 benchmarks/baseline.txt
 bench_results
