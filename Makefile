@@ -38,6 +38,37 @@ benchmark: release
 benchmark_baseline: release
 	$(V) ./util/benchmark.py --generate-baseline
 
+pgo: merge_profraw pgouse
+
+ifeq ($(findstring clang++,$(CXX)),clang++)
+clean_pgodata: clean
+	$(V) rm -f default_*.profraw default.profdata
+else
+clean_pgodata: clean
+	$(V) rm -f *.gcda objects/*.gcda stdlib/*/*.gcda
+endif
+
+pgobuild: CXXFLAGS+=-fprofile-generate -march=native
+pgobuild: LDFLAGS+=-fprofile-generate -flto
+ifeq ($(findstring clang++,$(CXX)),clang++)
+pgobuild: CXXFLAGS+=-mllvm -vp-counters-per-site=5
+endif
+pgobuild: | clean_pgodata cgoto
+
+pgorun: | pgobuild benchmark
+
+ifeq ($(findstring clang++,$(CXX)),clang++)
+merge_profraw: pgorun
+	$(V) llvm-profdata merge --output=default.profdata default_*.profraw
+else
+merge_profraw: pgorun
+endif
+
+pgouse: merge_profraw
+	$(V) $(MAKE) clean
+	$(V) $(MAKE) cgoto CXXFLAGS=-fprofile-use CXXFLAGS+=-march=native LDFLAGS+=-fprofile-use LDFLAGS+=-flto
+	$(V) $(MAKE) benchmark
+
 depend: .depend
 
 .depend: $(SRCS)
