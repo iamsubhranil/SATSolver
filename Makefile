@@ -19,8 +19,10 @@ all: release
 cgoto: CXXFLAGS += -DSAT_USE_COMPUTED_GOTO
 cgoto: release
 
+profile: CXXFLAGS += -O2 -g3
+profile: cgoto
+
 release: CXXFLAGS += -O3
-release: LDFLAGS += -s
 release: sat
 
 debug: CXXFLAGS += -g3 -DDEBUG
